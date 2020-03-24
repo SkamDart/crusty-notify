@@ -3,11 +3,13 @@
 #include <cstdlib>
 #include <new>
 
+struct ResultINotifyEventCTransport;
+
 struct INotifyC {
   Inotify *ptr;
 };
 
-struct ResultCInotifyTransport {
+struct ResultINotifyCTransport {
   bool is_ok;
   char *err_msg;
   int err_len;
@@ -17,13 +19,15 @@ struct ResultCInotifyTransport {
 extern "C" {
 
 /// Release any resources related to our inotify result instance.
-void inotify_destroy(ResultCInotifyTransport _inotify);
+void inotify_destroy(INotifyC inotify_c);
+
+void inotify_destroy_error(char *err);
 
 /// C-FFI Functions
 /// Initialize the passed inotify instance to watch `path`.
-ResultCInotifyTransport inotify_init(char *c_path);
+ResultINotifyCTransport inotify_init(char *c_path);
 
 /// Blocking read on the inotify instance.
-void inotify_read_blocking(INotifyC inotify);
+ResultINotifyEventCTransport inotify_read_blocking(INotifyC inotify_c);
 
 } // extern "C"
